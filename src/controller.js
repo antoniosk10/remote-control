@@ -1,6 +1,7 @@
 import { mouseMove } from "./actions/mouseMove.js";
 import { getMousePosition } from "./actions/getMousePosition.js";
 import { drawFigure } from "./actions/drawFigure.js";
+import { printScreen } from "./actions/printScreen.js";
 
 export default {
   mouse_left: (offset) => mouseMove("left", offset),
@@ -11,4 +12,5 @@ export default {
   draw_square: (...props) => drawFigure("square", ...props),
   draw_rectangle: (...props) => drawFigure("rectangle", ...props),
   draw_circle: (...props) => drawFigure("circle", ...props),
+  prnt_scrn: printScreen,
 };

@@ -1,6 +1,6 @@
 import robot from "robotjs";
 
-export const mouseMove = (direction, offset) => {
+export const mouseMove = (direction: string, offset: string) => {
   const currentPosition = robot.getMousePos();
   const offsetNumber = +offset;
 

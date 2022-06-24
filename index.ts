@@ -1,12 +1,11 @@
+import { pipeline, Transform } from "stream";
 import { createWebSocketStream, WebSocketServer } from "ws";
-import { controller } from "./src/controller";
 import { httpServer } from "./src/http_server/index";
-import { ControllerType } from "./src/types";
-import { parseData } from "./src/utils/parseData";
+import { response } from "./src/response";
 
 const HTTP_PORT = 3000;
 
-console.log(`Start static http server on the ${HTTP_PORT} port!`);
+console.log(`Start static http server on the http://localhost:${HTTP_PORT}`);
 httpServer.listen(HTTP_PORT);
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -17,20 +16,25 @@ wss.on("connection", (ws) => {
     decodeStrings: false,
     encoding: "utf8",
   });
-  ws.on("message", async (data) => {
-    try {
-      const dataString = data.toString();
-      const [command, param1, param2] = parseData(dataString);
+  const actionStream = new Transform({
+    decodeStrings: false,
+    encoding: "utf8",
+  });
+  actionStream._transform = (chunk, _, callback) => {
+    console.log(`<- ${chunk}`);
+    response(chunk)
+      .then((res) => {
+        callback(null, `${res}`);
+      })
+      .catch((err) => console.log(err));
+  };
 
-      const response = await controller[command as keyof ControllerType](
-        param1,
-        param2
-      );
-      duplex.write(response);
-    } catch (err) {
-      console.log(err);
+  pipeline(duplex, actionStream, duplex, (err) => {
+    if (err) {
+      console.error("Pipeline failed.", err);
     }
   });
+
   ws.on("close", () => {
     console.log("WebSocket has been closed!");
   });
@@ -38,6 +42,10 @@ wss.on("connection", (ws) => {
 
 wss.on("close", () => {
   console.log("WebSocketServer has been closed!");
+});
+
+wss.on("headers", (header) => {
+  console.log(header);
 });
 
 process.on("SIGINT", () => {

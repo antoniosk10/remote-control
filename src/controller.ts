@@ -1,10 +1,10 @@
-import { drawFigure } from "./actions/drawFigure";
-import { getMousePosition } from "./actions/getMousePosition";
-import { mouseMove } from "./actions/mouseMove";
-import { printScreen } from "./actions/printScreen";
+import {
+  drawFigure,
+  getMousePosition,
+  mouseMove,
+  printScreen,
+} from "./actions";
 import { ControllerType } from "./types";
-
-//TODO: import index
 
 export const controller: ControllerType = {
   mouse_left: (offset) => mouseMove("left", offset),

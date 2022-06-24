@@ -34,5 +34,5 @@ export const mouseMove = (direction: string, offset: string) => {
       break;
     }
   }
-  return `mouse_${direction}`;
+  return `mouse_${direction} ${offset}`;
 };

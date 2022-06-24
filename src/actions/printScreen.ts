@@ -22,5 +22,6 @@ export const printScreen = async () => {
   );
 
   const base = await image.getBase64Async(Jimp.MIME_PNG);
+  console.log(`-> prnt_scrn ${base.split(",")[1]}`);
   return `prnt_scrn ${base.split(",")[1]}`;
 };
